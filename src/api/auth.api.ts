@@ -1,11 +1,17 @@
 import { api } from '@/services/api'
 
-import type { LoginPayload, LoginResponse, VerifyOtpPayload, VerifyOtpResponse } from '@/types/auth'
+import type {
+  ExchangeTokenPayload,
+  ExchangeTokenResponse,
+  LoginPayload,
+  LoginResponse,
+  VerifyOtpPayload,
+  VerifyOtpResponse,
+} from '@/types/auth'
 
 export const authApi = {
   login(payload: LoginPayload) {
-    return api<LoginResponse>('/api/v1/auth/login',
-      {
+    return api<LoginResponse>('/api/v1/auth/login', {
         method: 'POST',
         body: payload,
       },
@@ -13,8 +19,15 @@ export const authApi = {
   },
 
   verifyOtp(payload: VerifyOtpPayload) {
-    return api<VerifyOtpResponse>('/api/v1/admin/auth/verify-mfa',
-      {
+    return api<VerifyOtpResponse>('/api/v1/auth/verify-login-otp', {
+        method: 'POST',
+        body: payload,
+      },
+    )
+  },
+
+  exchangeToken(payload: ExchangeTokenPayload) {
+    return api<ExchangeTokenResponse>('/api/v1/auth/exchange-token', {
         method: 'POST',
         body: payload,
       },
@@ -27,7 +40,8 @@ export const authApi = {
 
   logout() {
     return api('/api/v1/admin/auth/logout', {
-      method: 'POST',
-    })
+        method: 'POST',
+      },
+    )
   },
 }

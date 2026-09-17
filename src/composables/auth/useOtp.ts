@@ -53,12 +53,12 @@ export const useOtp = () => {
   }
 
   const handleBackToLogin = async () => {
-    authStore.clearMfa()
+    authStore.clearChallenge()
     await router.replace({ name: 'login' })
   }
 
   onMounted(() => {
-    if (!authStore.mfaToken) {
+    if (!authStore.challengeId) {
       void router.replace({ name: 'login' })
     }
   })

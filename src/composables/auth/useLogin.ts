@@ -63,14 +63,20 @@ export const useLogin = () => {
         turnstile_token: turnstileToken.value
       })
 
-      if (response.success && response.data?.mfa_token) {
-        
+      if (
+        response.success &&
+        response.data?.otp_required &&
+        response.data?.challenge_id
+      ) {
         $q.notify({
           type: 'positive',
-          message: 'Verification code sent to your email.'
+          message: 'Verification code sent to your email.',
         })
 
-        await router.push({ name: 'verify-otp' })
+        await router.push({
+          name: 'verify-otp',
+        })
+
         return true
       }
 

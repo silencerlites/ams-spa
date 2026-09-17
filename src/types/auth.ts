@@ -14,18 +14,10 @@ export interface User {
   id: number
   email: string
   active: boolean
-
-  email_verified_at:
-    | string
-    | null
-
+  email_verified_at: string | null
   created_at: string
   updated_at: string
-
-  deleted_at:
-    | string
-    | null
-
+  deleted_at: string | null
   roles: Role[]
 }
 
@@ -44,10 +36,7 @@ export interface MfaStep {
 
 export interface LoginData {
   mfa_token: string
-
-  mfa_token_expires_at:
-    string
-
+  mfa_token_expires_at: string
   mfa_steps: MfaStep[]
 }
 
@@ -64,11 +53,8 @@ export interface VerifyOtpPayload {
 
 export interface VerifyOtpData {
   token: string
-
   token_name: string
-
   expires_at: string
-
   user: User
 }
 

@@ -19,81 +19,85 @@ export const useLogin = () => {
 
   const emailRules = [
     (value: string) => Boolean(value) || 'Email is required',
-    (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || 'Enter a valid email address',
+    (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || 'Enter a valid email address'
   ]
 
-  const passwordRules = [(value: string) => Boolean(value) || 'Password is required']
-  const togglePassword = () => { showPassword.value = !showPassword.value }
-  const setTurnstileToken = (token: string) => { turnstileToken.value = token }
+  const passwordRules = [
+    (value: string) => Boolean(value) || 'Password is required'
+  ]
 
-  const clearTurnstileToken = () => { turnstileToken.value = '' }
-
-  const handleTurnstileError = (errorCode: string) => {
-    turnstileToken.value = ''
-    console.error('Turnstile error:', errorCode)
-
-    $q.notify({
-      type: 'negative',
-      message: 'Security verification failed. Please try again.' })
+  const togglePassword = () => {
+    showPassword.value = !showPassword.value
   }
 
-  const handleLogin = async () => {
-      if (authStore.loading) return
-    
-      if (!turnstileToken.value) {
-        $q.notify({
-          type: 'negative',
-          message: 'Please complete the security verification.',
-        })
-        return
-      }
+  const setTurnstileToken = (token: string) => {
+    turnstileToken.value = token
+  }
 
-      try {
-        const response =
-          await authStore.login({
-            email: form.email.trim(),
-            password: form.password,
-            turnstile_token: turnstileToken.value,
-          })
+  const clearTurnstileToken = () => {
+    turnstileToken.value = ''
+  }
 
-        if (response.success && response.data?.mfa_token) {
-          $q.notify({
-            type: 'positive',
-            message: 'Verification code sent to your email.',
-          })
+  const handleTurnstileError = (errorCode: string) => {
+    clearTurnstileToken()
+    console.error('Turnstile error:', errorCode)
+    $q.notify({ type: 'negative', message: 'Security verification failed. Please try again.' })
+  }
 
-          await router.push({
-            name: 'verify-otp',
-          })
-        }
-      } catch (error) {
-        clearTurnstileToken()
+  const handleLogin = async (): Promise<boolean> => {
+    if (authStore.loading) return false
 
-        $q.notify({
-          type: 'negative',
-          message: getApiErrorMessage(error, 'Invalid email or password.'),
-        })
-      }
+    if (!turnstileToken.value) {
+      $q.notify({
+        type: 'negative',
+        message: 'Please complete the security verification.',
+      })
+
+      return false
     }
+
+    try {
+      const response = await authStore.login({
+        email: form.email.trim(),
+        password: form.password,
+        turnstile_token: turnstileToken.value
+      })
+
+      if (response.success && response.data?.mfa_token) {
+        
+        $q.notify({
+          type: 'positive',
+          message: 'Verification code sent to your email.'
+        })
+
+        await router.push({ name: 'verify-otp' })
+        return true
+      }
+
+      return false
+    } catch (error) {
+      clearTurnstileToken()
+
+      $q.notify({
+        type: 'negative',
+        message: getApiErrorMessage(error, 'Invalid email or password.'),
+      })
+
+      return false
+    }
+  }
 
   return {
     form,
-
     showPassword,
-
     turnstileToken,
-
     emailRules,
     passwordRules,
-
     authStore,
-
     togglePassword,
-
     setTurnstileToken,
     clearTurnstileToken,
     handleTurnstileError,
-
     handleLogin,
   }
 }

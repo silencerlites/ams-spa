@@ -1,16 +1,10 @@
 import { api } from '@/services/api'
 
-import type {
-  LoginPayload,
-  LoginResponse,
-  VerifyOtpPayload,
-  VerifyOtpResponse,
-} from '@/models/auth'
+import type { LoginPayload, LoginResponse, VerifyOtpPayload, VerifyOtpResponse } from '@/types/auth'
 
 export const authApi = {
   login(payload: LoginPayload) {
-    return api<LoginResponse>(
-      '/api/v1/auth/login',
+    return api<LoginResponse>('/api/v1/auth/login',
       {
         method: 'POST',
         body: payload,
@@ -19,8 +13,7 @@ export const authApi = {
   },
 
   verifyOtp(payload: VerifyOtpPayload) {
-    return api<VerifyOtpResponse>(
-      '/api/v1/admin/auth/verify-mfa',
+    return api<VerifyOtpResponse>('/api/v1/admin/auth/verify-mfa',
       {
         method: 'POST',
         body: payload,

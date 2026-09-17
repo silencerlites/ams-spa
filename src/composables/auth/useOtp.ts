@@ -18,16 +18,12 @@ export const useOtp = () => {
     (value: string) => value.length === OTP_LENGTH || `OTP must be ${OTP_LENGTH} digits`,
   ]
 
-  const isOtpValid = computed(() => {
-    return /^\d{6}$/.test(otp.value)
-  })
-
-  const sanitizeOtp = (value: | string | number | null) => {
-    otp.value = String(value ?? '').replace(/\D/g, '').slice(0, OTP_LENGTH)
-  }
+  const isOtpValid = computed(() => { return /^\d{6}$/.test(otp.value)})
+  const sanitizeOtp = (value: | string | number | null) => { otp.value = String(value ?? '').replace(/\D/g, '').slice(0, OTP_LENGTH)}
 
   const handleVerifyOtp = async () => {
     if (!isOtpValid.value) {
+
       $q.notify({
         type: 'negative',
         message: 'Enter a valid 6-digit OTP.',
@@ -40,6 +36,7 @@ export const useOtp = () => {
 
     try {
       await authStore.verifyOtp(otp.value)
+
       $q.notify({
         type: 'positive',
         message: 'Verification successful.'
@@ -61,10 +58,6 @@ export const useOtp = () => {
   }
 
   onMounted(() => {
-    /*
-     * User should not access OTP
-     * without a valid MFA session.
-     */
     if (!authStore.mfaToken) {
       void router.replace({ name: 'login' })
     }
@@ -72,17 +65,11 @@ export const useOtp = () => {
 
   return {
     otp,
-
     otpRules,
-
     isOtpValid,
-
     authStore,
-
     sanitizeOtp,
-
     handleVerifyOtp,
-
     handleBackToLogin,
   }
 }

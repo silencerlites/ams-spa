@@ -1,1 +1,27 @@
-// app global css
+// Cloudflare Turnstile
+.turnstile-wrapper {
+  width: 100%;
+
+  .turnstile-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+// OTP Page
+.otp-page {
+  .otp-card {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .otp-input {
+    input {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 8px;
+    }
+  }
+}

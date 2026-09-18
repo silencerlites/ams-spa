@@ -1,36 +1,76 @@
 import type { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
-  // Authentication pages
-  {path: '/', component: () => import('@/layouts/AuthLayout.vue'),
+  {
+    path: '/',
+    component: () => import('@/layouts/AuthLayout.vue'),
+
     children: [
-      { path: 'login', name: 'login',
+      {
+        path: '',
+        name: 'home',
+        component: () => import('@/pages/HomePage.vue'),
+      },
+
+      {
+        path: 'login',
+        name: 'login',
         component: () => import('@/pages/auth/LoginPage.vue'),
-        meta: { guest: true }},
 
-      { path: 'verify-otp', name: 'verify-otp',
+        meta: {
+          guest: true,
+        },
+      },
+
+      {
+        path: 'verify-otp',
+        name: 'verify-otp',
         component: () => import('@/pages/auth/OtpPage.vue'),
-        meta: { otpRequired: true }},
+
+        meta: {
+          otpRequired: true,
+        },
+      },
+
+      /*
+       * 404
+       *
+       * Keep this LAST.
+       */
+      {
+        path: ':catchAll(.*)*',
+        name: 'not-found',
+        component: () => import('@/pages/ErrorNotFound.vue'),
+      },
     ],
   },
 
-  // Authenticated application
-  { path: '/', component: () => import('@/layouts/MainLayout.vue'),
+  {
+    path: '/',
+    component: () => import('@/layouts/MainLayout.vue'),
+
     children: [
-      { path: '', redirect: '/dashboard'},
-      { path: 'dashboard', name: 'dashboard',
+      {
+        path: 'dashboard',
+        name: 'dashboard',
         component: () => import('@/pages/IndexPage.vue'),
-        meta: { requiresAuth: true }},
 
-      { path: 'second', name: 'second',
+        meta: {
+          requiresAuth: true,
+        },
+      },
+
+      {
+        path: 'second',
+        name: 'second',
         component: () => import('@/pages/SecondPage.vue'),
-        meta: { requiresAuth: true}},
+
+        meta: {
+          requiresAuth: true,
+        },
+      },
     ],
   },
-
-  // 404
-  { path: '/:catchAll(.*)*', name: 'not-found',
-    component: () => import('@/pages/ErrorNotFound.vue')},
 ]
 
 export default routes
